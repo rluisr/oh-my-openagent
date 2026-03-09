@@ -9,7 +9,8 @@ import { executeSync } from "./sync-executor"
 export function createCallOmoAgent(
   ctx: PluginInput,
   backgroundManager: BackgroundManager,
-  disabledAgents: string[] = []
+  disabledAgents: string[] = [],
+  syncPollTimeoutMs?: number
 ): ToolDefinition {
   const agentDescriptions = ALLOWED_AGENTS.map(
     (name) => `- ${name}: Specialized agent for ${name} tasks`
@@ -57,7 +58,7 @@ export function createCallOmoAgent(
         return await executeBackground(args, toolCtx, backgroundManager, ctx.client)
       }
 
-      return await executeSync(args, toolCtx, ctx)
+      return await executeSync(args, toolCtx, ctx, undefined, { syncPollTimeoutMs })
     },
   })
 }
